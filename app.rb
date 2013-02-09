@@ -48,7 +48,7 @@ end
 
 # Pages
 get '/' do
-  haml :index, :layout => :'layouts/application'
+  redirect '/hackathons'
 end
 
 get '/hackathons' do
