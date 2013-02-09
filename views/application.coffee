@@ -67,12 +67,12 @@ draw_chart = (data) ->
       data: commit_averages
       yAxis: 0
     ,
-      name: "Commit Message Swearwords"
-      data: swearword_count_totals
-      yAxis: 1
-    ,
       name: "Message Length (Avg)"
       data: message_length_averages
+      yAxis: 1
+    ,
+      name: "Commit Message Swearwords"
+      data: swearword_count_totals
       yAxis: 2
     ,
     ]
