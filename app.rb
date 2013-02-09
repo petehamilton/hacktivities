@@ -39,13 +39,13 @@ set :haml, {:format => :html5} # default Haml format is :xhtml
 
 # Assets
 get '/application.css' do
-  get_cache('application-css', 30) {
+  get_cache('application-css', 600) {
     less :application
   }
 end
 
 get '/application.js' do
-  get_cache('application-js', 30) {
+  get_cache('application-js', 600) {
     coffee :application
   }
 end
