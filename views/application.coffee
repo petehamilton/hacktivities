@@ -8,7 +8,7 @@ refresh_data = ->
       $('.github-api-stats').show()
       process_stats(data)
   .error ->
-    $('.system-error').show()
+    $('#system-error').show()
     $('.github-api-stats').hide()
 
     # Refresh data every 60 seconds
