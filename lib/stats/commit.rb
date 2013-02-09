@@ -22,7 +22,11 @@ module HacktivityStats
     end
 
     def committer_login
-      @commit['committer']['login']
+      begin
+        @commit['committer']['login']
+      rescue
+        ''
+      end
     end
 
     def time
