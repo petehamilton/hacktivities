@@ -10,18 +10,28 @@
       .span12
         %h1= "Stats for #{@hackathon.name}"
     .row
-      .span6
+      .span12
         %input#stats-link{:type => "hidden", :value => "/hackathons/#{@hackathon.id}/stats.json"}
         #stats
           .centered Loading Statistics...
           %br
           .loading
-      .span6
+    .row
+      .span4
         %a.twitter-timeline{:"data-widget-id" => "#{@hackathon.twitter_widget_id}", :height => "400"}
           Tweets about "#ichack"
         :javascript
           !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
-
+      .span8
+        .row
+          .span2.stat-box
+            %span.title Total Participants
+            .well
+              #stat-total-participants
+          .span2.stat-box
+            .title Avg. Team Size
+            .well
+              #stat-average-team-size
     .row
       .span12
         %h1= "Repositories (#{@repositories.count})"

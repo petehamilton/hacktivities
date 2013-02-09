@@ -2,16 +2,16 @@ refresh_data = ->
   $.getJSON $('#stats-link').val(), (data) ->
     process_stats(data)
 
-    # Refresh data every 15 seconds
+    # Refresh data every 60 seconds
     setTimeout ->
       refresh_data()
-    , 15000
+    , 60 * 1000
 
 process_stats = (data) ->
   timed_stats = data.timed_stats
 
-  participant_count = data.total_participants
-  average_team_size = data.average_team_size
+  $("#stat-total-participants").html(data.total_participants)
+  $("#stat-average-team-size").html(data.average_team_size)
 
   draw_chart(timed_stats)
 
@@ -27,19 +27,16 @@ draw_chart = (timed_stats) ->
     chart:
       renderTo: "stats"
       type: "line"
-      margin: [ 50, 50, 100, 80]
+      margin: [40, 10, 120, 10]
+      height: 300
 
     title:
-      text: "Live Hackathon Stats"
+      text: "Live Hackathon Repository Stats"
       x: -20 #center
-
-    subtitle:
-      text: "Source: Github Repositories"
-      x: -20
 
     xAxis:
       title:
-        text: "Time"
+        text: ""
       categories: hours
       labels:
         align: "right"
@@ -68,12 +65,12 @@ draw_chart = (timed_stats) ->
         "<b>#{@series.name} during #{@x}</b><br/>#{@y}"
 
     legend:
-      layout: "vertical"
-      align: "right"
-      verticalAlign: "top"
-      x: -10
-      y: 100
-      borderWidth: 0
+      # layout: "vertical"
+      # align: "right"
+      # verticalAlign: "top"
+      # x: -10
+      y: 0
+      # borderWidth: 0
 
     series: [
       name: "Total Commits"
