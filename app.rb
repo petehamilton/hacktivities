@@ -39,11 +39,15 @@ set :haml, {:format => :html5} # default Haml format is :xhtml
 
 # Assets
 get '/application.css' do
-  less :application
+  get_cache('application-css', 30) {
+    less :application
+  }
 end
 
 get '/application.js' do
-  coffee :application
+  get_cache('application-js', 30) {
+    coffee :application
+  }
 end
 
 # Pages
@@ -64,8 +68,12 @@ get '/hackathons/:id/stats.json' do
     return {error: "Invalid Hackathon ID"}.to_json
   end
 
-  hackathon_profiler = HacktivityStats::HackathonProfiler.new(@hackathon)
-  hackathon_profiler.get_stats.to_json
+  begin
+    hackathon_profiler = HacktivityStats::HackathonProfiler.new(@hackathon)
+    hackathon_profiler.get_stats.to_json
+  rescue HacktivityStats::GithubRateError
+    return {api_error: true}.to_json
+  end
 end
 
 get '/hackathons/:hackathon_id' do

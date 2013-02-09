@@ -1,21 +1,27 @@
 module HacktivityStats
+  class GithubRateError < StandardError; end
   class RepositoryProfiler
     def initialize(respository)
       @repository = respository
     end
 
     def get_raw_commits
-      uri = URI.parse(@repository.commits_url)
+      get_cache("raw-commits-#{@repository.id}", 60) {
+        uri = URI.parse(@repository.commits_url)
 
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true
+        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
-      request = Net::HTTP::Get.new(uri.request_uri)
+        request = Net::HTTP::Get.new(uri.request_uri)
 
-      response = http.request(request)
-      raw_commits = JSON.parse(response.body)
-      return raw_commits
+        response = http.request(request)
+        result = JSON.parse(response.body)
+        if !result.kind_of?(Array) && result.keys.include?('message') && result['message'].include?("API Rate Limit Exceeded")
+          raise HacktivityStats::GithubRateError
+        end
+        return JSON.parse(response.body)
+      }
     end
 
     def get_commits

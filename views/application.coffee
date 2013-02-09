@@ -1,6 +1,12 @@
 refresh_data = ->
   $.getJSON $('#stats-link').val(), (data) ->
-    process_stats(data)
+    if data.api_error?
+      $('#github-api-error-message').show()
+      $('.github-api-stats').hide()
+    else
+      $('#github-api-error-message').hide()
+      $('.github-api-stats').show()
+      process_stats(data)
 
     # Refresh data every 60 seconds
     setTimeout ->
