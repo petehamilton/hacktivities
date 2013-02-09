@@ -14,7 +14,7 @@ refresh_data = ->
     # Refresh data every 60 seconds
     setTimeout ->
       refresh_data()
-    , 60 * 1000
+    , 15 * 1000
 
 process_stats = (data) ->
   timed_stats = data.timed_stats
