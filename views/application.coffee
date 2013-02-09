@@ -29,14 +29,23 @@ draw_chart = (data) ->
         align: "right"
         rotation: -45,
 
-    yAxis:
+    yAxis: [
       title: ""
       min: 0
-      plotLines: [
-        value: 0
-        width: 1
-        color: "#808080"
-      ]
+      labels:
+       enabled: false
+    ,
+      title: ""
+      min: 0
+      labels:
+       enabled: false
+    ,
+      title: ""
+      min: 0
+      labels:
+       enabled: false
+    ]
+
 
     tooltip:
       formatter: ->
@@ -53,15 +62,20 @@ draw_chart = (data) ->
     series: [
       name: "Total Commits"
       data: commit_totals
+      yAxis: 0
     ,
       name: "Per-Hack Commits"
       data: commit_averages
-    ,
-      name: "Message Length (Avg)"
-      data: message_length_averages
+      yAxis: 0
     ,
       name: "Commit Message Swearwords"
       data: swearword_count_totals
+      yAxis: 1
+    ,
+      name: "Message Length (Avg)"
+      data: message_length_averages
+      yAxis: 2
+    ,
     ]
   )
 
