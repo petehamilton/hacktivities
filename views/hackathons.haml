@@ -1,0 +1,12 @@
+.container
+  .row
+    .span12
+      %h1 Hackathons
+  .row
+    .span12
+      - if @hackathons.length == 0
+        .alert.alert-info No Registered Hackathons
+      %ul.nav.nav-tabs.nav-stacked
+        - @hackathons.each do |hackathon|
+          %li
+            %a{:href => "/hackathons/#{hackathon.id}"}= hackathon.name

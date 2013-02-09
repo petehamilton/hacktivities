@@ -1,0 +1,54 @@
+.container
+  - if @hackathon.nil?
+    .row
+      .span12
+        .alert.alert-error
+          Invalid Hackathon URL -
+          %a{:href => "/hackathons"} See registered hackathons
+  - else
+    .row
+      .span12
+        %h1= "Stats for #{@hackathon.name}"
+    .row
+      .span12
+        %input#stats-link{:type => "hidden", :value => "/hackathons/#{@hackathon.id}/stats.json"}
+        #stats
+          .centered Loading Statistics...
+          %br
+          .loading
+    .row
+      .span12
+        %h1 Repositories
+    .row
+      .span12
+        %form.form-inline{:action => "/hackathons/#{@hackathon.id}/repositories", :method => 'POST'}
+          .control-group{:class => @repository.errors.include?(:original_url) ? "error" : ""}
+            .controls
+              %input#original-url{:name => 'repository[original_url]', :value => @repository.original_url, :placeholder => "e.g. https://github.com/PeterHamilton/classy-cate", :type => "text"}
+              %button.btn.btn-success{:type => "submit"} Add
+            - if @repository.errors.include? :original_url
+              %span.help-block That repository already exists for this hackathon!
+    .row
+      .span12
+        %table.table.table-striped.table-bordered
+          %thead
+            %tr
+              %th User
+              %th Respository
+              %th URL
+              %th
+          %tbody
+          - if @repositories.length == 0
+            %tr
+              %td{:colspan => 4} No Repositories
+          - else
+            - @repositories.each do |r|
+              %tr
+                %td= r.user
+                %td= r.name
+                %td
+                  %a{:href => r.original_url}= r.original_url
+                %td
+                  %a.btn.btn-danger.btn-delete{:href => "/repositories/#{r.id}"}
+                    %i.icon-trash
+                    Remove
