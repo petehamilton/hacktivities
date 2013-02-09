@@ -12,12 +12,17 @@ module HacktivityStats
         message: _message,
         message_length: _message.length,
         swearwords: _swearwords,
-        swearword_count: _swearwords.size
+        swearword_count: _swearwords.size,
+        committer_login: committer_login
       }
     end
 
     def message
       @commit['commit']['message']
+    end
+
+    def committer_login
+      @commit['committer']['login']
     end
 
     def time

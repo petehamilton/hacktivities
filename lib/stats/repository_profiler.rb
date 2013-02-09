@@ -33,9 +33,13 @@ module HacktivityStats
       commit_stats = get_stats_for_commits
       countable_keys = [:message_length, :swearword_count]
 
+      committers = []
+
       # Calculate bucket totals
       time_buckets = {}
       commit_stats.each do |s|
+        committers.push(s[:committer_login])
+
         t = s[:time]
 
         time_buckets[t] ||= {}
@@ -58,7 +62,10 @@ module HacktivityStats
         tb.delete(:message_length)
       end
 
-      return time_buckets
+      return {
+        timed_stats: time_buckets,
+        participant_count: committers.uniq.size
+      }
     end
   end
 end

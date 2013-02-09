@@ -1,10 +1,27 @@
-draw_chart = (data) ->
-  hours = (moment(k).format('MMM Do, ha') for k, v of data).reverse()
-  commit_totals = (v.total_commits for k, v of data).reverse()
-  commit_averages = (v.average_commits for k, v of data).reverse()
-  message_length_averages = (v.average_message_length for k, v of data).reverse()
-  swearword_count_totals = (v.total_swearword_count for k, v of data).reverse()
-  swearword_count_averages = (v.average_total_swearword_count for k, v of data).reverse()
+refresh_data = ->
+  $.getJSON $('#stats-link').val(), (data) ->
+    process_stats(data)
+
+    # Refresh data every 15 seconds
+    setTimeout ->
+      refresh_data()
+    , 15000
+
+process_stats = (data) ->
+  timed_stats = data.timed_stats
+
+  participant_count = data.total_participants
+  average_team_size = data.average_team_size
+
+  draw_chart(timed_stats)
+
+draw_chart = (timed_stats) ->
+  hours = (moment(k).format('MMM Do, ha') for k, v of timed_stats).reverse()
+  commit_totals = (v.total_commits for k, v of timed_stats).reverse()
+  commit_averages = (v.average_commits for k, v of timed_stats).reverse()
+  message_length_averages = (v.average_message_length for k, v of timed_stats).reverse()
+  swearword_count_totals = (v.total_swearword_count for k, v of timed_stats).reverse()
+  swearword_count_averages = (v.average_total_swearword_count for k, v of timed_stats).reverse()
 
   chart = new Highcharts.Chart(
     chart:
@@ -95,5 +112,9 @@ $(document).ready ->
       .success ->
         window.location.reload()
   if $('#stats').length > 0
-    $.getJSON $('#stats-link').val(), (data) ->
-      draw_chart(data)
+    refresh_data()
+
+    # Refresh page every 10 minutes
+    setTimeout ->
+      refresh_data()
+    , 60 * 10 * 1000
