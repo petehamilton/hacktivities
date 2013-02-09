@@ -1,5 +1,4 @@
 draw_chart = (data) ->
-  console.log data
   hours = (moment(k).format('MMM Do, ha') for k, v of data).reverse()
   commit_totals = (v.total_commits for k, v of data).reverse()
   commit_averages = (v.average_commits for k, v of data).reverse()
