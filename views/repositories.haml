@@ -24,7 +24,7 @@
 
     .row
       .span12
-        %h1 Repositories
+        %h1= "Repositories (#{@repositories.count})"
     .row
       .span12
         %form.form-inline{:action => "/hackathons/#{@hackathon.id}/repositories", :method => 'POST'}
