@@ -5,5 +5,5 @@ begin
     set :profanities, YAML.load(f)
   end
 rescue
-  logger.error "Couldn't load profanities"
+  puts "Couldn't load profanities"
 end
