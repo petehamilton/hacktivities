@@ -71,7 +71,7 @@ get '/hackathons/:id/stats.json' do
   begin
     hackathon_profiler = HacktivityStats::HackathonProfiler.new(@hackathon)
     hackathon_profiler.get_stats.to_json
-  rescue HacktivityStats::GithubRateError
+  rescue HacktivityStats::GithubRateError, JSON::ParserError
     return {api_error: true}.to_json
   end
 end

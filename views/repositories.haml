@@ -13,6 +13,10 @@
       .span12
         .alert.alert-error
           It appears we are having issues with the Github API (most likely a rate error). Please be patient!
+    .row#system-error{:style => "display: none"}
+      .span12
+        .alert.alert-warning
+          It appears we are having some issues. Please be patient!
     #main-graph.row.github-api-stats
       .span12
         %input#stats-link{:type => "hidden", :value => "/hackathons/#{@hackathon.id}/stats.json"}
