@@ -96,6 +96,7 @@ post '/hackathons/:hackathon_id/repositories' do
 
   @repository = Repository.new(params[:repository])
   @repository.hackathon_id = @hackathon.id
+  @repository.original_url = @repository.original_url.gsub('.git', '')
 
   if @repository.save
     redirect "/hackathons/#{@hackathon.id}"
