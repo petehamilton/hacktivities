@@ -31,9 +31,11 @@ module HacktivityStats
 
       # Averages
       hack_stats[:timed_stats].each do |timestamp, stats|
+        stats[:average_message_length] = stats[:average_message_length] / repository_profilers.size
         stats[:average_commits] = stats[:commit_count] / repository_profilers.size
         stats[:average_swearword_count] = stats[:total_swearword_count] / repository_profilers.size
       end
+
       hack_stats[:average_team_size] = hack_stats[:total_participants] / repository_profilers.size
 
       min_time = hack_stats[:timed_stats].keys.min
