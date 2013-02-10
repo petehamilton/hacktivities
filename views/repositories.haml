@@ -26,11 +26,13 @@
           .loading
     .row
       .span4
+        %h2 Twitter Feed
         %a.twitter-timeline{:"data-widget-id" => "#{@hackathon.twitter_widget_id}", :height => "400"}
           Tweets about "#ichack"
         :javascript
           !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
       .span4
+        %h2 Misc Stats
         .row
           .span4
             .row
@@ -39,6 +41,7 @@
             .row
               .span4.stat-box
                 #redbull-bar
+                  .loading
         .row
           .span4
             .row
@@ -47,6 +50,7 @@
             .row
               .span4.stat-box
                 #pizza-bar
+                  .loading
         .row
           .span4.github-api-stats
             .row
@@ -60,6 +64,17 @@
                 .well
                   #stat-average-team-size
                     .loading
+              .span4.stat-box
+                .title Most Common Words
+                .well
+                  #stat-common-words
+                    .loading
+      .span4
+        %h2 Recent Commits
+        .row
+          .span4.stat-box
+            .row#recent-commits
+              .loading
     .row
       .span12
         %h1= "Repositories (#{@repositories.count})"

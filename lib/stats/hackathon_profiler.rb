@@ -55,7 +55,15 @@ module HacktivityStats
 
       hack_stats[:redbull_cans] = 80
       hack_stats[:pizzas] = 65
+      hack_stats[:common_words] = ["fixes", "works", "stuff", "hopefully", "hack"]
 
+      commits = []
+      repository_profilers.each do |rp|
+        commits += rp.get_commits
+      end
+
+      commits.sort! { |a, b| b.time_bucket <=> a.time_bucket}
+      hack_stats[:commits] = commits[0..5]
       return hack_stats
     end
   end

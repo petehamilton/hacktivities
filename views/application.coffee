@@ -27,6 +27,22 @@ process_stats = (data) ->
   $("#pizza-bar").html('')
   for x in [0..data.pizzas]
     $("#pizza-bar").append("<img src='/images/pizza.jpg'/>")
+
+  $('#stat-common-words').html('')
+  $('#stat-common-words').append('<p>' + data.common_words.join(", ") + '</p>')
+
+  $('#recent-commits').html('')
+  for c in data.commits
+    avatar = c.commit.committer.avatar_url
+    committer_name = c.commit.commit.committer.name
+    commit_date = c.commit.commit.committer.date
+    message = c.commit.commit.message
+    elem = $('<div class="span4 commit-entry" />')
+    inner = $('<div class="row"/>')
+    inner.append('<div class="span1"><img class="commit-avatar img-polaroid" src="' + avatar + '"/></div>')
+    inner.append('<div class="span3 commit-message"><div>' + message + '</div><div class="detail">' + committer_name + ' // ' + moment(commit_date).format('MMM Do, ha') + '</div></div>')
+    elem.append(inner)
+    $('#recent-commits').append(elem)
   draw_chart(data.timed_stats)
 
 draw_chart = (timed_stats) ->
