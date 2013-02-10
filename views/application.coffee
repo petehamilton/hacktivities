@@ -11,10 +11,10 @@ refresh_data = ->
     $('#system-error').show()
     $('.github-api-stats').hide()
 
-    # Refresh data every 60 seconds
-    setTimeout ->
-      refresh_data()
-    , 15 * 1000
+  # Refresh data every 60 seconds
+  setTimeout ->
+    refresh_data()
+  , 15 * 1000
 
 process_stats = (data) ->
   $("#stat-total-participants").html(data.total_participants)
