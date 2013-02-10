@@ -48,6 +48,7 @@ process_stats = (data) ->
 draw_chart = (timed_stats) ->
   timed_stats = $(timed_stats)
   hours = timed_stats.map (k, v) -> moment(v.date).format('MMM Do, ha')
+  commit_counts = timed_stats.map (k, v) -> v.stats.commit_count
   commit_totals = timed_stats.map (k, v) -> v.stats.total_commits
   commit_averages = timed_stats.map (k, v) -> v.stats.average_commits
   message_length_averages = timed_stats.map (k, v) -> v.stats.average_message_length
@@ -58,7 +59,7 @@ draw_chart = (timed_stats) ->
     chart:
       renderTo: "stats"
       type: "line"
-      margin: [40, 10, 120, 10]
+      margin: [40, 10, 120, 50]
       height: 300
 
     title:
@@ -76,8 +77,9 @@ draw_chart = (timed_stats) ->
     yAxis: [
       title: ""
       min: 0
-      labels:
-       enabled: false
+    ,
+      title: ""
+      min: 0
     ,
       title: ""
       min: 0
@@ -104,21 +106,25 @@ draw_chart = (timed_stats) ->
       # borderWidth: 0
 
     series: [
-      name: "Total Commits"
-      data: commit_totals
+      name: "Commit Counts"
+      data: commit_counts
       yAxis: 0
     ,
       name: "Per-Hack Commits"
       data: commit_averages
       yAxis: 0
     ,
+      name: "Total Commits"
+      data: commit_totals
+      yAxis: 1
+    ,
       name: "Message Length (Avg)"
       data: message_length_averages
-      yAxis: 1
+      yAxis: 2
     ,
       name: "Commit Message Swearwords"
       data: swearword_count_totals
-      yAxis: 2
+      yAxis: 3
     ,
     ]
   )

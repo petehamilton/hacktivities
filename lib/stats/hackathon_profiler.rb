@@ -14,13 +14,16 @@ module HacktivityStats
       }
 
       # Totals
+      running_total = 0
       repository_profilers.each do |rp|
         rstats = rp.get_stats
         hack_stats[:total_participants] += rstats[:participant_count]
         rstats[:timed_stats].each do |timestamp, tstats|
           timed_stats = rstats[:timed_stats]
+          running_total += tstats[:commits]
           hack_stats[:timed_stats][timestamp] ||= Hash.new(0)
-          hack_stats[:timed_stats][timestamp][:total_commits] += tstats[:commits]
+          hack_stats[:timed_stats][timestamp][:commit_count] += tstats[:commits]
+          hack_stats[:timed_stats][timestamp][:total_commits] = running_total
           hack_stats[:timed_stats][timestamp][:average_message_length] += tstats[:average_message_length]
           hack_stats[:timed_stats][timestamp][:total_swearword_count] += tstats[:swearword_count][:total]
         end
@@ -28,7 +31,7 @@ module HacktivityStats
 
       # Averages
       hack_stats[:timed_stats].each do |timestamp, stats|
-        stats[:average_commits] = stats[:total_commits] / repository_profilers.size
+        stats[:average_commits] = stats[:commit_count] / repository_profilers.size
         stats[:average_swearword_count] = stats[:total_swearword_count] / repository_profilers.size
       end
       hack_stats[:average_team_size] = hack_stats[:total_participants] / repository_profilers.size
@@ -38,16 +41,27 @@ module HacktivityStats
 
       timed_stats = []
       hour = min_time
+      prev_stats = {
+          :commit_count => 0,
+          :total_commits => 0,
+          :average_message_length => 0,
+          :total_swearword_count => 0,
+          :average_commits => 0,
+          :average_swearword_count => 0
+      }
       while hour < max_time
         stats = hack_stats[:timed_stats][hour]
         stats ||= {
+          :commit_count => 0,
           :total_commits => 0,
           :average_message_length => 0,
           :total_swearword_count => 0,
           :average_commits => 0,
           :average_swearword_count => 0
         }
+        stats[:total_commits] += prev_stats[:total_commits]
         timed_stats.push({ :date => hour, :stats => stats })
+        prev_stats = stats
         hour += 3600
       end
 
