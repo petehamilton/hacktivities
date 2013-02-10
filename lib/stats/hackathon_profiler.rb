@@ -78,6 +78,7 @@ module HacktivityStats
 
       commits.sort! { |a, b| b.time_bucket <=> a.time_bucket}
       hack_stats[:commits] = commits[0..5]
+      hack_stats[:total_commits] = running_total
       return hack_stats
     end
   end
