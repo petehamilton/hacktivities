@@ -5,8 +5,8 @@ def get_cache(index, timeout, &block)
   begin
     result = settings.cache.get(index)
     if result.nil?
-      puts "CACHE: Setting #{index}"
       result = block.call
+      puts "CACHE: Setting #{index}"
       settings.cache.set(index, result, timeout)
     else
       puts "CACHE: Retrieving #{index}"

@@ -39,13 +39,13 @@ set :haml, {:format => :html5} # default Haml format is :xhtml
 
 # Assets
 get '/application.css' do
-  get_cache('application-css', 600) {
+  get_cache('application-css', settings.asset_cache_for) {
     less :application
   }
 end
 
 get '/application.js' do
-  get_cache('application-js', 600) {
+  get_cache('application-js', settings.asset_cache_for) {
     coffee :application
   }
 end
@@ -71,7 +71,8 @@ get '/hackathons/:id/data.json' do
   begin
     hackathon_profiler = HacktivityStats::HackathonProfiler.new(@hackathon)
     hackathon_profiler.get_stats.to_json
-  rescue HacktivityStats::GithubRateError, JSON::ParserError
+  rescue HacktivityStats::GithubRateError, JSON::ParserError => e
+    puts "ERROR: #{e.inspect}"
     return {api_error: true}.to_json
   end
 end

@@ -17,9 +17,16 @@ refresh_data = ->
   , 15 * 1000
 
 process_stats = (data) ->
+  console.log data
   $("#stat-total-participants").html(data.total_participants)
   $("#stat-average-team-size").html(data.average_team_size)
+  $("#redbull-bar").html('')
+  for x in [0..data.redbull_cans]
+    $("#redbull-bar").append("<img src='/images/redbull.jpg'/>")
 
+  $("#pizza-bar").html('')
+  for x in [0..data.pizzas]
+    $("#pizza-bar").append("<img src='/images/pizza.jpg'/>")
   draw_chart(data.timed_stats)
 
 draw_chart = (timed_stats) ->

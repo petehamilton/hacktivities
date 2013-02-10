@@ -30,18 +30,36 @@
           Tweets about "#ichack"
         :javascript
           !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
-      .span4.github-api-stats
+      .span6
         .row
-          .span2.stat-box
-            %span.title Total Participants
-            .well
-              #stat-total-participants
-                .loading
-          .span2.stat-box
-            .title Avg. Team Size
-            .well
-              #stat-average-team-size
-                .loading
+          .span6
+            .row
+              .span6.stat-box
+                %span.title Redbull Cans Drunk
+            .row
+              .span6.stat-box
+                #redbull-bar
+        .row
+          .span6
+            .row
+              .span6.stat-box
+                %span.title Pizzas Eaten
+            .row
+              .span6.stat-box
+                #pizza-bar
+        .row
+          .span6.github-api-stats
+            .row
+              .span2.stat-box
+                %span.title Code Contributors
+                .well
+                  #stat-total-participants
+                    .loading
+              .span2.stat-box
+                .title Avg. Team Size
+                .well
+                  #stat-average-team-size
+                    .loading
     .row
       .span12
         %h1= "Repositories (#{@repositories.count})"

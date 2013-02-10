@@ -53,6 +53,9 @@ module HacktivityStats
 
       hack_stats[:timed_stats] = timed_stats
 
+      hack_stats[:redbull_cans] = 80
+      hack_stats[:pizzas] = 65
+
       return hack_stats
     end
   end
