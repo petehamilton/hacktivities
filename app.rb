@@ -60,7 +60,7 @@ get '/hackathons' do
   haml :hackathons, :layout => :'layouts/application'
 end
 
-get '/hackathons/:id/stats.json' do
+get '/hackathons/:id/data.json' do
   content_type :json
   begin
     @hackathon = Hackathon.find(params[:id])
