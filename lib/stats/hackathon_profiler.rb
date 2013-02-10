@@ -33,6 +33,26 @@ module HacktivityStats
       end
       hack_stats[:average_team_size] = hack_stats[:total_participants] / repository_profilers.size
 
+      min_time = hack_stats[:timed_stats].keys.min
+      max_time = hack_stats[:timed_stats].keys.max
+
+      timed_stats = []
+      hour = min_time
+      while hour < max_time
+        stats = hack_stats[:timed_stats][hour]
+        stats ||= {
+          :total_commits => 0,
+          :average_message_length => 0,
+          :total_swearword_count => 0,
+          :average_commits => 0,
+          :average_swearword_count => 0
+        }
+        timed_stats.push({ :date => hour, :stats => stats })
+        hour += 3600
+      end
+
+      hack_stats[:timed_stats] = timed_stats
+
       return hack_stats
     end
   end

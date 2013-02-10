@@ -17,20 +17,19 @@ refresh_data = ->
     , 15 * 1000
 
 process_stats = (data) ->
-  timed_stats = data.timed_stats
-
   $("#stat-total-participants").html(data.total_participants)
   $("#stat-average-team-size").html(data.average_team_size)
 
-  draw_chart(timed_stats)
+  draw_chart(data.timed_stats)
 
 draw_chart = (timed_stats) ->
-  hours = (moment(k).format('MMM Do, ha') for k, v of timed_stats).reverse()
-  commit_totals = (v.total_commits for k, v of timed_stats).reverse()
-  commit_averages = (v.average_commits for k, v of timed_stats).reverse()
-  message_length_averages = (v.average_message_length for k, v of timed_stats).reverse()
-  swearword_count_totals = (v.total_swearword_count for k, v of timed_stats).reverse()
-  swearword_count_averages = (v.average_total_swearword_count for k, v of timed_stats).reverse()
+  timed_stats = $(timed_stats)
+  hours = timed_stats.map (k, v) -> moment(v.date).format('MMM Do, ha')
+  commit_totals = timed_stats.map (k, v) -> v.stats.total_commits
+  commit_averages = timed_stats.map (k, v) -> v.stats.average_commits
+  message_length_averages = timed_stats.map (k, v) -> v.stats.average_message_length
+  swearword_count_totals = timed_stats.map (k, v) -> v.stats.total_swearword_count
+  swearword_count_averages = timed_stats.map (k, v) -> v.stats.average_total_swearword_count
 
   chart = new Highcharts.Chart(
     chart:
