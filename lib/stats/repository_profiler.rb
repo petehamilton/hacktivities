@@ -9,6 +9,8 @@ module HacktivityStats
       get_cache("raw-commits-#{@repository.id}", 60) {
         uri = URI.parse(@repository.commits_url)
 
+        puts "REQUESTING #{uri.to_s}"
+
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true
         http.verify_mode = OpenSSL::SSL::VERIFY_NONE
@@ -20,7 +22,7 @@ module HacktivityStats
         if !result.kind_of?(Array) && result.keys.include?('message') && result['message'].include?("API Rate Limit Exceeded")
           raise HacktivityStats::GithubRateError
         end
-        return JSON.parse(response.body)
+        JSON.parse(response.body)
       }
     end
 
