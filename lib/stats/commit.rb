@@ -5,7 +5,7 @@ module HacktivityStats
     end
 
     def stats
-      _swearwords = swearwords
+      _swearwords = swearwords.count
       _message = message
       return {
         time: time_bucket,
