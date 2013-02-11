@@ -49,7 +49,7 @@ process_stats = (data) ->
 
 draw_chart = (timed_stats) ->
   timed_stats = $(timed_stats)
-  hours = timed_stats.map (k, v) -> moment(v.date).format('MMM Do, ha')
+  hours = timed_stats.map (k, v) -> moment(v.timestamp).format('MMM Do, ha')
   commit_counts = timed_stats.map (k, v) -> v.stats.commit_count
   commit_totals = timed_stats.map (k, v) -> v.stats.total_commits
   commit_averages = timed_stats.map (k, v) -> v.stats.average_commits
