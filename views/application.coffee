@@ -21,7 +21,7 @@ process_stats = (data) ->
   $("#stat-total-participants").html(data.total_participants)
   $("#stat-average-team-size").html(data.average_team_size)
   $("#stat-total-commits").html(data.total_commits)
-  $("#stat-total-hours").html('32.5')
+  $("#stat-total-hours").html(data.total_hours)
   $("#redbull-bar").html('')
   for x in [0..data.redbull_cans]
     $("#redbull-bar").append("<img src='/images/redbull.jpg'/>")

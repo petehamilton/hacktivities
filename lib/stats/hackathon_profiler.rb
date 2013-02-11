@@ -67,6 +67,7 @@ module HacktivityStats
       hack_stats[:commits] = commits[0..5]
       hack_stats[:total_commits] = timed_stats.last[:stats][:total_commits]
       hack_stats[:common_words] = word_frequencies.sort_by{ |key, value| -value }[0..5].map{|x| x.first}
+      hack_stats[:total_hours] = ((max_time - min_time) / 1.hour).round
 
       # TODO: Pull from Database/Live Data
       hack_stats[:redbull_cans] = @hackathon.redbull_cans_drunk
