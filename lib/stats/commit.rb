@@ -5,16 +5,22 @@ module HacktivityStats
     end
 
     def stats
-      _swearwords = swearwords.count
-      _message = message
       return {
-        time: time_bucket,
-        message: _message,
-        message_length: _message.length,
-        swearwords: _swearwords,
-        swearword_count: _swearwords.size,
+        time_bucket: time_bucket,
+        word_frequencies: word_frequencies,
+        message_length: message.length,
+        swearwords: swearwords,
+        swearword_count: swearwords.size,
         committer_login: committer_login
       }
+    end
+
+    def word_frequencies
+      word_freqs = Hash.new(0)
+      @commit['commit']['message'].split.each do |word|
+        word_freqs[word] += 1
+      end
+      return word_freqs
     end
 
     def message

@@ -29,7 +29,7 @@ module HacktivityStats
     def get_commits
       raw_commits = get_raw_commits
       commits = raw_commits.map{ |c| Commit.new(c) }
-      return commits
+      return commits.sort { |a, b| b.time_bucket <=> a.time_bucket}
     end
 
     def get_stats_for_commits
@@ -38,42 +38,33 @@ module HacktivityStats
     end
 
     def get_stats
-      commit_stats = get_stats_for_commits
-      countable_keys = [:message_length, :swearword_count]
+      all_commit_stats = get_stats_for_commits
 
-      committers = []
-
-      # Calculate bucket totals
       time_buckets = {}
-      commit_stats.each do |s|
-        committers.push(s[:committer_login])
+      popular_words = Hash.new(0)
+      all_commit_stats.each do |commit_stat|
+        commit_time_bucket = commit_stat[:time_bucket]
+        time_buckets[commit_time_bucket] ||= {}
 
-        t = s[:time]
+        time_buckets[commit_time_bucket][:commit_count] ||= 0
+        time_buckets[commit_time_bucket][:commit_count] += 1
 
-        time_buckets[t] ||= {}
-        time_buckets[t][:commits] ||= 0
-        time_buckets[t][:commits] += 1
+        time_buckets[commit_time_bucket][:total_message_length] ||= 0
+        time_buckets[commit_time_bucket][:total_message_length] += commit_stat[:message_length]
 
-        countable_keys.each do |k|
-          time_buckets[t][k] ||= Hash.new(0)
-          time_buckets[t][k][:total] += s[k]
+        time_buckets[commit_time_bucket][:swearword_count] ||= 0
+        time_buckets[commit_time_bucket][:swearword_count] += commit_stat[:swearword_count]
+
+        time_buckets[commit_time_bucket][:committers] ||= []
+        time_buckets[commit_time_bucket][:committers].push(commit_stat[:committer_login]).uniq!
+
+        time_buckets[commit_time_bucket][:word_frequencies] ||= Hash.new(0)
+        commit_stat[:word_frequencies].each do |w, f|
+          time_buckets[commit_time_bucket][:word_frequencies][w] += f
         end
       end
 
-      # Calculate averages
-      time_buckets.each do |k, v|
-        countable_keys.each{ |k| v[k][:average] = v[k][:total] / v[:commits] }
-      end
-
-      time_buckets.each do |k, tb|
-        tb[:average_message_length] = tb[:message_length][:average]
-        tb.delete(:message_length)
-      end
-
-      return {
-        timed_stats: time_buckets,
-        participant_count: committers.uniq.size
-      }
+      return time_buckets
     end
   end
 end

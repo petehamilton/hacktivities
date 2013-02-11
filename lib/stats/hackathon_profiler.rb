@@ -8,79 +8,70 @@ module HacktivityStats
       repository_profilers = @hackathon.repositories.map{ |r| RepositoryProfiler.new(r) }
       return {} if repository_profilers.empty?
 
-      hack_stats = {
-        timed_stats: {},
-        total_participants: 0
-      }
-
       # Totals
-      running_total = 0
+      time_buckets = {}
+      committers = []
+      commits = []
+      word_frequencies = Hash.new(0)
       repository_profilers.each do |rp|
-        rstats = rp.get_stats
-        hack_stats[:total_participants] += rstats[:participant_count]
-        rstats[:timed_stats].each do |timestamp, tstats|
-          timed_stats = rstats[:timed_stats]
-          running_total += tstats[:commits]
-          hack_stats[:timed_stats][timestamp] ||= Hash.new(0)
-          hack_stats[:timed_stats][timestamp][:commit_count] += tstats[:commits]
-          hack_stats[:timed_stats][timestamp][:total_commits] = running_total
-          hack_stats[:timed_stats][timestamp][:average_message_length] += tstats[:average_message_length]
-          hack_stats[:timed_stats][timestamp][:total_swearword_count] += tstats[:swearword_count][:total]
+        commits += rp.get_commits
+        rp.get_stats.each do |timestamp, tstats|
+          committers += tstats[:committers]
+          time_buckets[timestamp] ||= Hash.new(0)
+          time_buckets[timestamp][:commit_count] += tstats[:commit_count]
+          time_buckets[timestamp][:total_message_length] += tstats[:total_message_length]
+          time_buckets[timestamp][:total_swearword_count] += tstats[:swearword_count]
+          tstats[:word_frequencies].each do |w, f|
+            word_frequencies[w] += f
+          end
         end
       end
+      commits.sort! { |a, b| b.time_bucket <=> a.time_bucket}
+      committers.uniq!
 
       # Averages
-      hack_stats[:timed_stats].each do |timestamp, stats|
-        stats[:average_message_length] = stats[:average_message_length] / repository_profilers.size
-        stats[:average_commits] = stats[:commit_count] / repository_profilers.size
-        stats[:average_swearword_count] = stats[:total_swearword_count] / repository_profilers.size
+      time_buckets.each do |timestamp, stats|
+        stats[:average_message_length] = (1.0 * stats[:total_message_length] / repository_profilers.size).ceil
+        stats[:average_commits] = (1.0 * stats[:commit_count] / repository_profilers.size).ceil
+        stats[:average_swearword_count] = (1.0 * stats[:total_swearword_count] / repository_profilers.size).ceil
       end
 
-      hack_stats[:average_team_size] = hack_stats[:total_participants] / repository_profilers.size
+      min_time = time_buckets.keys.min
+      max_time = time_buckets.keys.max
 
-      min_time = hack_stats[:timed_stats].keys.min
-      max_time = hack_stats[:timed_stats].keys.max
+      empty_stats = {
+        :commit_count => 0,
+        :total_commits => 0,
+        :average_message_length => 0,
+        :total_swearword_count => 0,
+        :average_commits => 0,
+        :average_swearword_count => 0
+      }
 
       timed_stats = []
       hour = min_time
-      prev_stats = {
-          :commit_count => 0,
-          :total_commits => 0,
-          :average_message_length => 0,
-          :total_swearword_count => 0,
-          :average_commits => 0,
-          :average_swearword_count => 0
-      }
+      prev_stats = empty_stats.dup
       while hour < max_time
-        stats = hack_stats[:timed_stats][hour]
-        stats ||= {
-          :commit_count => 0,
-          :total_commits => 0,
-          :average_message_length => 0,
-          :total_swearword_count => 0,
-          :average_commits => 0,
-          :average_swearword_count => 0
-        }
-        stats[:total_commits] += prev_stats[:total_commits]
-        timed_stats.push({ :date => hour, :stats => stats })
+        stats = time_buckets[hour]
+        stats ||= empty_stats.dup
+        stats[:total_commits] = prev_stats[:total_commits] + stats[:commit_count]
+        timed_stats.push({ :timestamp => hour, :stats => stats })
         prev_stats = stats
         hour += 3600
       end
 
+      hack_stats = {}
       hack_stats[:timed_stats] = timed_stats
-
-      hack_stats[:redbull_cans] = 80
-      hack_stats[:pizzas] = 65
-      hack_stats[:common_words] = ["fixes", "works", "stuff", "hopefully", "hack"]
-
-      commits = []
-      repository_profilers.each do |rp|
-        commits += rp.get_commits
-      end
-
-      commits.sort! { |a, b| b.time_bucket <=> a.time_bucket}
+      hack_stats[:total_participants] = committers.size
+      hack_stats[:average_team_size] = committers.size / repository_profilers.size
       hack_stats[:commits] = commits[0..5]
-      hack_stats[:total_commits] = running_total
+      hack_stats[:total_commits] = timed_stats.last[:stats][:total_commits]
+      hack_stats[:common_words] = word_frequencies.sort_by{ |key, value| -value }[0..5].map{|x| x.first}
+
+      # TODO: Pull from Database/Live Data
+      hack_stats[:redbull_cans] = @hackathon.redbull_cans_drunk
+      hack_stats[:pizzas] = @hackathon.pizzas_eaten
+
       return hack_stats
     end
   end
