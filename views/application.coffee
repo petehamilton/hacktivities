@@ -79,9 +79,8 @@ draw_chart = (timed_stats) ->
     yAxis: [
       title: ""
       min: 0
-    ,
-      title: ""
-      min: 0
+      labels:
+       enabled: false
     ,
       title: ""
       min: 0
@@ -116,17 +115,13 @@ draw_chart = (timed_stats) ->
       data: commit_averages
       yAxis: 0
     ,
-      name: "Total Commits"
-      data: commit_totals
-      yAxis: 1
-    ,
       name: "Message Length (Avg)"
       data: message_length_averages
-      yAxis: 2
+      yAxis: 1
     ,
       name: "Commit Message Swearwords"
       data: swearword_count_totals
-      yAxis: 3
+      yAxis: 2
     ,
     ]
   )
