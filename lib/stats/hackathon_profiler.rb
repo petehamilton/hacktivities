@@ -37,7 +37,7 @@ module HacktivityStats
       end
 
       min_time = time_buckets.keys.min
-      max_time = time_buckets.keys.max
+      max_time = min_time + 2.days
 
       empty_stats = {
         :commit_count => 0,
