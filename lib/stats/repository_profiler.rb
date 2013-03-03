@@ -7,7 +7,7 @@ module HacktivityStats
 
     def get_raw_commits
       done = false
-      get_cache("raw-commits-#{@repository.id}", 60) {
+      get_cache("raw-commits-#{@repository.id}", 120) {
         original_url = @repository.commits_url
         url = original_url
         commits = []
@@ -51,7 +51,6 @@ module HacktivityStats
       all_commit_stats = get_stats_for_commits
 
       time_buckets = {}
-      popular_words = Hash.new(0)
       all_commit_stats.each do |commit_stat|
         commit_time_bucket = commit_stat[:time_bucket]
         time_buckets[commit_time_bucket] ||= {}
