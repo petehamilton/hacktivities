@@ -15,6 +15,6 @@ class Repository < ActiveRecord::Base
   end
 
   def commits_url
-    "https://api.github.com/repos/#{user}/#{name}/commits?client_id=#{ENV['GITHUB_CLIENT_ID']}&client_secret=#{ENV['GITHUB_CLIENT_SECRET']}"
+    "https://api.github.com/repos/#{user}/#{name}/commits?per_page=100&client_id=#{ENV['GITHUB_CLIENT_ID']}&client_secret=#{ENV['GITHUB_CLIENT_SECRET']}"
   end
 end
