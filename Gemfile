@@ -17,7 +17,7 @@ gem 'sinatra-activerecord' # excellent gem that ports ActiveRecord for Sinatra
 
 # Sass & Compass
 gem 'sass', '~> 3.1.12'
-gem 'compass', '~> 0.11.6'
+gem 'compass', '~> 0.12.2'
 
 # Sass libraries
 gem 'grid-coordinates', '~> 1.1.4'
